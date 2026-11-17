@@ -22,14 +22,16 @@
     numero_documento: 'Número de documento: se revisa según el tipo',
     fecha_nacimiento: 'Fecha de nacimiento: no puede ser futura',
     municipio: 'Municipio: sugiere la lista del DANE',
-    telefono: 'Teléfono: solo números, 7 o 10 dígitos'
+    telefono: 'Teléfono: solo números; 10 dígitos (celular, o fijo con indicativo 60X)'
   };
 
   var TEXTO_AUTORIZACION = 'Autorizo de manera previa, expresa e informada a [nombre de la organización], ' +
-    'como responsable del tratamiento, para recolectar, guardar y usar mis datos personales con el fin de [finalidad], ' +
+    'como responsable del tratamiento ([dirección y teléfono del responsable]), para recolectar, guardar y usar mis datos personales con el fin de [finalidad], ' +
     'de acuerdo con la Ley 1581 de 2012 y las normas que la reglamentan. ' +
     'Me informaron que puedo conocer, actualizar, rectificar y pedir que se supriman mis datos, ' +
-    'y revocar esta autorización, por medio de [canal para ejercer derechos].';
+    'y revocar esta autorización, por medio de [canal para ejercer derechos]. ' +
+    'También me informaron que responder preguntas sobre datos sensibles o sobre niños, niñas y adolescentes es facultativo ' +
+    '(artículo 12 de la Ley 1581 de 2012).';
 
   function plantilla() {
     return {
@@ -151,7 +153,8 @@
       if (c.rol === 'telefono') {
         var tel = v.replace(/[\s\-().]/g, '');
         if (!/^\d+$/.test(tel)) { errores[c.id] = 'Escribe solo números.'; return; }
-        if (tel.length !== 7 && tel.length !== 10) { errores[c.id] = 'Un teléfono tiene 10 números (celular) o 7 (fijo).'; return; }
+        // Se siguen aceptando 7 números por los fijos anotados a la antigua; el mensaje guía a 10.
+        if (tel.length !== 7 && tel.length !== 10) { errores[c.id] = 'Un teléfono tiene 10 números (celular, o fijo con indicativo 60X).'; return; }
         salida[c.id] = tel; return;
       }
       salida[c.id] = v;

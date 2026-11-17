@@ -7,7 +7,7 @@
    que ya la tienen instalada descargan la versión nueva y la página ofrece «Actualizar». */
 'use strict';
 
-var VERSION = '1.0.0';
+var VERSION = '1.0.1';
 var CACHE = 'formulario-de-campo-' + VERSION;
 var ARCHIVOS = [
   './',

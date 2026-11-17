@@ -15,7 +15,7 @@ Un formulario gratis y abierto que funciona sin internet: se abre una vez con se
 - **Funciona sin conexión** después de la primera visita, y se puede instalar en la pantalla de inicio en Android y en iPhone. Una franja siempre visible dice si hay conexión o no.
 - Trae la plantilla **«Inscripción de participantes»**: nombres, apellidos, tipo y número de documento (CC, TI, CE, PPT, RC u otro), fecha de nacimiento, sexo, municipio, vereda o barrio, teléfono y la casilla obligatoria de autorización de tratamiento de datos, con un texto modelo que cita la Ley 1581 de 2012.
 - **Sugiere los municipios** de Colombia mientras escribes (lista DIVIPOLA del DANE) y al exportar agrega el departamento y el código.
-- **Revisa lo que se escribe:** documento solo con números según el tipo, fechas que existen (dd/mm/aaaa), teléfono de 7 o 10 números, datos obligatorios, y avisa si ese documento ya está registrado en el celular.
+- **Revisa lo que se escribe:** documento solo con números según el tipo, fechas que existen (dd/mm/aaaa), teléfono de 10 números (celular, o fijo con indicativo 60X), datos obligatorios, y avisa si ese documento ya está registrado en el celular.
 - **Editor del formulario:** agrega, quita, ordena y renombra campos (texto, número, fecha, una opción de varias, sí o no) y marca los obligatorios. La definición se **exporta e importa como archivo JSON**, para que todo el equipo use el mismo formulario.
 - **Lista de registros** por día, con conteo; cada registro se puede corregir o borrar.
 - **Exporta a Excel (.xlsx) y a CSV**, con la fecha en el nombre del archivo. Después de exportar ofrece borrar los registros del celular, con confirmación.
