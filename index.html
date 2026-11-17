@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="es-CO">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Formulario de campo · Estado X</title>
+<meta name="description" content="Un formulario que funciona sin internet: inscribe participantes en el celular, guarda los registros ahí mismo y expórtalos a Excel cuando vuelva la señal. Nada pasa por un servidor.">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#f2ebdc">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Formulario">
+<meta name="format-detection" content="telephone=no">
+<link rel="canonical" href="https://estado-x.github.io/formulario-de-campo-colombia/">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="es_CO">
+<meta property="og:site_name" content="Formulario de campo · Consultorio X de Estado X">
+<meta property="og:url" content="https://estado-x.github.io/formulario-de-campo-colombia/">
+<meta property="og:title" content="Formulario de campo">
+<meta property="og:description" content="Un formulario que funciona sin internet: inscribe participantes en el celular, guarda los registros ahí mismo y expórtalos a Excel cuando vuelva la señal.">
+<meta property="og:image" content="https://estado-x.github.io/formulario-de-campo-colombia/docs/compartir.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Formulario de campo. Herramienta abierta · Consultorio X de Estado X">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Formulario de campo">
+<meta name="twitter:description" content="Un formulario que funciona sin internet: inscribe participantes en el celular y expórtalos a Excel cuando vuelva la señal.">
+<meta name="twitter:image" content="https://estado-x.github.io/formulario-de-campo-colombia/docs/compartir.png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/icono-180.png">
+<link rel="stylesheet" href="assets/estilos.css">
+</head>
+<body>
+<a class="saltar" href="#contenido">Ir al contenido</a>
+
+<header class="barra">
+  <div class="contenedor barra__in">
+    <a class="marca" href="#acerca">Formulario de <span>campo</span></a>
+    <nav class="pestanas" aria-label="Secciones">
+      <a href="#registrar" data-vista="registrar">Registrar</a>
+      <a href="#registros" data-vista="registros">Registros <span class="pestanas__n" id="n-pestana" hidden></span></a>
+      <a href="#formulario" data-vista="formulario">Formulario</a>
+      <a href="#acerca" data-vista="acerca">Acerca de</a>
+    </nav>
+  </div>
+</header>
+
+<p class="red" id="red" role="status"><span class="punto" aria-hidden="true"></span><span id="red-texto">Los registros se guardan solo en este celular</span></p>
+
+<div class="actualizar" id="actualizar" hidden>
+  <div class="contenedor actualizar__in">
+    <p>Hay una versión nueva de esta página.</p>
+    <button class="boton boton--chico" type="button" id="btn-actualizar">Actualizar</button>
+  </div>
+</div>
+
+<main id="contenido" tabindex="-1">
+
+  <noscript><div class="contenedor"><p class="aviso aviso--error">Este formulario necesita JavaScript para guardar los registros en el celular.</p></div></noscript>
+
+  <div class="contenedor" id="sin-almacen" hidden>
+    <p class="aviso aviso--error">Este navegador no deja guardar datos en el celular (pasa en las ventanas privadas o de incógnito). Abre la página en una ventana normal para poder registrar.</p>
+  </div>
+
+  <!-- ===== Registrar ===== -->
+  <section class="vista" id="vista-registrar" aria-labelledby="t-registrar" hidden>
+    <div class="contenedor vista__in registrar">
+      <div class="registrar__form">
+        <p class="kicker" id="k-registrar">Registro nuevo</p>
+        <h1 class="titulo" id="t-registrar">Inscripción de participantes</h1>
+        <p class="aviso aviso--ojo" id="aviso-corchetes" hidden>El texto de autorización todavía tiene espacios entre corchetes. Complétalo en <a href="#formulario">Formulario</a> antes de salir a campo.</p>
+        <p class="hecho" id="msg-registrar" role="status" tabindex="-1" hidden></p>
+        <form id="form-registro" novalidate autocomplete="off">
+          <div id="campos"></div>
+          <div class="autoriza" id="bloque-autorizacion" hidden>
+            <h2 class="autoriza__titulo">Autorización de tratamiento de datos</h2>
+            <p class="autoriza__texto" id="texto-autorizacion"></p>
+            <label class="casilla"><input type="checkbox" id="autorizo" aria-describedby="texto-autorizacion err-autorizo"><span>La persona leyó o escuchó este texto y autoriza</span></label>
+            <p class="error" id="err-autorizo" hidden></p>
+          </div>
+          <div class="repetido" id="repetido" hidden>
+            <p id="repetido-texto"></p>
+            <div class="fila-botones">
+              <button class="boton boton--linea" type="button" id="btn-repetido-si">Guardar de todos modos</button>
+              <button class="boton boton--linea" type="button" id="btn-repetido-no">Volver a revisar</button>
+            </div>
+          </div>
+          <p class="error error--resumen" id="err-resumen" role="alert" hidden></p>
+          <div class="fila-botones fila-botones--guardar">
+            <button class="boton boton--grande" type="submit" id="btn-guardar">Guardar registro</button>
+            <button class="boton boton--linea" type="button" id="btn-cancelar-edicion" hidden>Cancelar</button>
+          </div>
+        </form>
+      </div>
+      <aside class="pulso" aria-label="Registros guardados">
+        <dl class="pulso__cifras">
+          <div><dt>Registros de hoy</dt><dd id="n-hoy">0</dd></div>
+          <div><dt>En este celular</dt><dd id="n-total">0</dd></div>
+        </dl>
+        <p class="pulso__rev"><a href="#registros">Ver y exportar</a></p>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ===== Registros ===== -->
+  <section class="vista" id="vista-registros" aria-labelledby="t-registros" hidden>
+    <div class="contenedor vista__in">
+      <p class="kicker">En este celular</p>
+      <h1 class="titulo" id="t-registros">Registros</h1>
+      <p class="conteo" id="conteo-hoy"></p>
+      <p class="hecho" id="msg-registros" role="status" tabindex="-1" hidden></p>
+
+      <div class="exportar" id="exportar">
+        <div class="fila-botones">
+          <button class="boton" type="button" id="btn-excel">Exportar a Excel</button>
+          <button class="boton boton--linea" type="button" id="btn-csv">Exportar CSV</button>
+        </div>
+        <p class="nota" id="nota-exportar">El archivo se descarga en este celular. Sale con todos los registros que hay guardados.</p>
+      </div>
+
+      <div class="despues" id="despues" hidden>
+        <h2 class="despues__titulo" id="despues-titulo" tabindex="-1"></h2>
+        <p id="despues-texto"></p>
+        <div class="fila-botones" id="despues-paso1">
+          <button class="boton boton--linea" type="button" id="btn-compartir" hidden>Compartir el archivo</button>
+          <button class="boton boton--linea" type="button" id="btn-borrar-exportados">Borrar estos registros del celular</button>
+          <button class="boton boton--linea" type="button" id="btn-dejar">Dejarlos por ahora</button>
+        </div>
+        <div class="confirmar" id="despues-paso2" hidden>
+          <p id="despues-pregunta"></p>
+          <div class="fila-botones">
+            <button class="boton boton--peligro" type="button" id="btn-borrar-si">Sí, borrar</button>
+            <button class="boton boton--linea" type="button" id="btn-borrar-no">No, dejarlos</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="lista-registros"></div>
+    </div>
+  </section>
+
+  <!-- ===== Formulario (editor) ===== -->
+  <section class="vista" id="vista-formulario" aria-labelledby="t-formulario" hidden>
+    <div class="contenedor vista__in editor">
+      <p class="kicker">Antes de salir a campo</p>
+      <h1 class="titulo" id="t-formulario">Arma tu formulario</h1>
+      <p class="entrada">Cambia los campos y el texto de autorización. Después exporta el formulario y compártelo, para que todo el equipo use el mismo.</p>
+      <p class="aviso aviso--ojo" id="aviso-con-registros" hidden></p>
+      <p class="hecho" id="msg-formulario" role="status" tabindex="-1" hidden></p>
+
+      <form id="form-editor" novalidate autocomplete="off">
+        <div class="campo">
+          <label for="ed-titulo">Nombre del formulario</label>
+          <input class="caja" type="text" id="ed-titulo" maxlength="80">
+        </div>
+
+        <h2 class="subtitulo">Campos</h2>
+        <ol class="ed-campos" id="ed-campos"></ol>
+        <button class="boton boton--linea" type="button" id="btn-agregar">Agregar un campo</button>
+
+        <h2 class="subtitulo">Autorización de datos</h2>
+        <label class="casilla"><input type="checkbox" id="ed-aut-activa"><span>Pedir la autorización en cada registro (obligatoria para guardar)</span></label>
+        <div class="campo">
+          <label for="ed-aut-texto">Texto que se le lee a la persona</label>
+          <textarea class="caja caja--area" id="ed-aut-texto" rows="9" maxlength="3000" aria-describedby="ed-aut-nota"></textarea>
+          <p class="nota" id="ed-aut-nota">Es un texto modelo. Reemplaza lo que está entre corchetes y valídalo con tu organización.</p>
+        </div>
+
+        <p class="error error--resumen" id="err-editor" role="alert" hidden></p>
+        <div class="fila-botones fila-botones--guardar">
+          <button class="boton boton--grande" type="submit" id="btn-guardar-forma">Guardar el formulario</button>
+        </div>
+      </form>
+
+      <h2 class="subtitulo">El mismo formulario para todo el equipo</h2>
+      <p class="entrada">Exporta el formulario como archivo, envíalo por donde quieras y cada persona lo importa en su celular.</p>
+      <div class="fila-botones">
+        <button class="boton boton--linea" type="button" id="btn-exportar-forma">Exportar el formulario</button>
+        <label class="boton boton--linea boton--archivo" for="archivo-forma">Importar un formulario</label>
+        <input class="sr" type="file" id="archivo-forma" accept=".json,application/json">
+      </div>
+      <p class="nota">El archivo es un JSON: trae los campos y el texto de autorización, nunca los registros.</p>
+
+      <div class="plantilla">
+        <button class="boton boton--linea" type="button" id="btn-plantilla">Volver a la plantilla original</button>
+        <div class="confirmar" id="plantilla-confirmar" hidden>
+          <p>Se reemplaza tu formulario por «Inscripción de participantes». Los registros guardados no se tocan.</p>
+          <div class="fila-botones">
+            <button class="boton boton--peligro" type="button" id="btn-plantilla-si">Sí, volver a la plantilla</button>
+            <button class="boton boton--linea" type="button" id="btn-plantilla-no">No</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Acerca de ===== -->
+  <section class="vista" id="vista-acerca" aria-labelledby="t-acerca" hidden>
+    <div class="cab">
+      <div class="contenedor cab__in">
+        <div class="cab__texto">
+          <p class="kicker">Herramienta abierta · Consultorio X de Estado X</p>
+          <h1 id="t-acerca">Formulario de <em>campo</em></h1>
+          <p class="bajada">Un formulario que funciona sin internet. Inscribe participantes en el celular, los registros se guardan ahí mismo y los exportas a Excel cuando vuelve la señal.</p>
+          <div class="cab__accion">
+            <a class="boton" href="#registrar">Empezar a registrar</a>
+            <a class="enlace-fuerte" href="#sin-internet">Úsalo sin internet</a>
+          </div>
+        </div>
+        <div class="pulso pulso--cab">
+          <p class="pulso__rev"><span class="punto" id="punto-listo" aria-hidden="true"></span><span id="estado-listo">Preparando el uso sin conexión…</span></p>
+          <p class="pulso__nota">Nada pasa por un servidor: no hay cuentas, claves ni rastreadores.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="contenedor cuerpo">
+
+      <section class="seccion" id="sin-internet" aria-labelledby="t-sin">
+        <div class="seccion__cab">
+          <h2 id="t-sin">Úsalo sin internet</h2>
+          <p class="nota">Se abre una vez con señal. Después, no la necesita.</p>
+        </div>
+        <button class="boton instalar" type="button" id="btn-instalar" hidden>Instalar en este celular</button>
+        <div class="dos">
+          <div>
+            <h3 class="h3">En Android (Chrome)</h3>
+            <ol class="pasos">
+              <li class="paso"><span class="paso__num" aria-hidden="true">1</span><p><span class="sr">1. </span>Abre esta página con internet y espera a que diga «Lista para usar sin conexión».</p></li>
+              <li class="paso"><span class="paso__num" aria-hidden="true">2</span><p><span class="sr">2. </span>Toca el menú de los tres puntos <span class="tecla">⋮</span>, arriba a la derecha.</p></li>
+              <li class="paso"><span class="paso__num" aria-hidden="true">3</span><p><span class="sr">3. </span>Elige <span class="tecla">Agregar a la pantalla principal</span> o <span class="tecla">Instalar aplicación</span>.</p></li>
+              <li class="paso"><span class="paso__num" aria-hidden="true">4</span><p><span class="sr">4. </span>Ábrela desde el ícono nuevo, aunque no haya señal.</p></li>
+            </ol>
+          </div>
+          <div>
+            <h3 class="h3">En iPhone (Safari)</h3>
+            <ol class="pasos">
+              <li class="paso"><span class="paso__num" aria-hidden="true">1</span><p><span class="sr">1. </span>Abre esta página en Safari, con internet, y espera a que diga «Lista para usar sin conexión».</p></li>
+              <li class="paso"><span class="paso__num" aria-hidden="true">2</span><p><span class="sr">2. </span>Toca el botón <span class="tecla">Compartir</span> (el cuadro con la flecha hacia arriba).</p></li>
+              <li class="paso"><span class="paso__num" aria-hidden="true">3</span><p><span class="sr">3. </span>Elige <span class="tecla">Agregar a inicio</span>.</p></li>
+              <li class="paso"><span class="paso__num" aria-hidden="true">4</span><p><span class="sr">4. </span>Ábrela siempre desde ese ícono: en iPhone, los registros del ícono y los de Safari se guardan por separado.</p></li>
+            </ol>
+          </div>
+        </div>
+        <p class="nota nota--pie">Pruébalo antes de salir: pon el celular en modo avión, abre el ícono y guarda un registro de ensayo.</p>
+      </section>
+
+      <section class="seccion limites" aria-labelledby="t-datos">
+        <div class="seccion__cab"><h2 id="t-datos">Tus datos</h2></div>
+        <div class="limites__texto">
+          <p class="limites__uno">Los registros se quedan en este celular hasta que los exportes.</p>
+          <div class="lista-texto">
+            <p>Esta página no los envía a ningún lado. Quien recoge los datos es responsable de cuidarlos.</p>
+            <p>Exporta y borra al final de cada jornada. Si pierdes el celular, lo cambias o borras los datos del navegador sin haber exportado, los registros se pierden.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="seccion limites" aria-labelledby="t-no">
+        <div class="seccion__cab"><h2 id="t-no">Lo que no hace</h2></div>
+        <div class="limites__texto">
+          <p class="limites__uno">No sincroniza entre celulares, no envía los datos a ningún lado y no hace copias de seguridad.</p>
+          <div class="lista-texto">
+            <p>Cada celular guarda lo suyo: al final, alguien junta los archivos de Excel. No reemplaza una plataforma de encuestas para miles de registros, ni revisa que un documento exista de verdad.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="seccion limites" aria-labelledby="t-criterio">
+        <div class="seccion__cab"><h2 id="t-criterio">Dónde entra tu criterio</h2></div>
+        <div class="limites__texto">
+          <p class="limites__uno">El formulario y el texto de autorización los defines y validas tú, o tu organización, antes de salir a campo.</p>
+          <div class="lista-texto">
+            <p>El texto que viene es un modelo que cita la Ley 1581 de 2012: completa lo que está entre corchetes y pide solo los datos que de verdad necesitas. Si inscribes niños, niñas o adolescentes, o recoges datos sensibles, revísalo primero con quien lleve lo jurídico en tu organización.</p>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+    <section class="hablamos oscuro" aria-labelledby="t-hablamos">
+      <div class="contenedor hablamos__in">
+        <p class="kicker">Consultorio X de Estado X</p>
+        <h2 id="t-hablamos">¿Hablamos de tu caso?</h2>
+        <p>Esta herramienta es una muestra. En Consultorio X montamos con tu equipo el recorrido completo de los datos de un proyecto: recogerlos en territorio, juntarlos sin duplicados, cuidarlos y convertirlos en el informe al financiador.</p>
+        <a class="boton boton--claro" href="https://www.linkedin.com/in/juanperezcuervo/" target="_blank" rel="noopener">Escríbeme en LinkedIn</a>
+        <p class="firma">Juan Camilo Pérez Cuervo · Head de Alianzas y Proyectos Estratégicos de Estado X</p>
+      </div>
+    </section>
+
+    <footer class="pie oscuro">
+      <div class="contenedor pie__in">
+        <p>Hecho por Estado X · licencia MIT · Inspirado en <a href="https://github.com/surveyjs/survey-library" target="_blank" rel="noopener">SurveyJS</a> (biblioteca de formularios, licencia MIT); no reutiliza su código</p>
+        <p>Municipios: DIVIPOLA del DANE, en <a href="https://www.datos.gov.co/d/gdxc-w37w" target="_blank" rel="noopener">datos.gov.co</a> (CC BY-SA 4.0), consultada el <span id="fecha-municipios">17/11/2026</span>.</p>
+        <p><a href="https://estadox.com" target="_blank" rel="noopener">estadox.com</a> · Esta página no tiene rastreadores.</p>
+      </div>
+    </footer>
+  </section>
+
+</main>
+
+<script src="assets/zip.js" defer></script>
+<script src="assets/excel.js" defer></script>
+<script src="assets/nucleo.js" defer></script>
+<script src="assets/almacen.js" defer></script>
+<script src="assets/app.js" defer></script>
+</body>
+</html>
